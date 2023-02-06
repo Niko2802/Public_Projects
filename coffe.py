@@ -12,7 +12,7 @@
 
 drinks = {
     "kapuchino": {"milk": 200, "coffee": 15, "coast": 100},
-    "latte": {"milk": 250, "coffe": 7, "water": 50, "coast": 150},
+    "latte": {"milk": 250, "coffee": 7, "water": 50, "coast": 150},
     "amerikano": {"water": 150, "coffee": 5, "coast": 120},
     "latte_with_syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
     "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
@@ -63,9 +63,14 @@ class CoffeeMachine():
     def init_menu(self):
         self.new_menu = []
         for item in self.menu:
-            if self.stor.milk > item.data["milk"] and self.stor.coffee > item.data["coffee"] and self.stor.milk > item.data["milk"]:
+            l = len(item.data) - 1
+            k = 0
+            st = self.stor.get()
+            for key in item.data:
+                if item.data[key] <= st.get(key, 0):
+                    k += 1
+            if l == k:
                 self.new_menu.append(item)
-        
-
 
 coffee = CoffeeMachine()
+coffee.init_menu()
