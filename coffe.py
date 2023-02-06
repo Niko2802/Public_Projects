@@ -18,7 +18,11 @@ drinks = {
     "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
 }
 
+class Ingridients():
+    def __init__(self) -> None:
+        self.kapuchino = {"milk": 200, "coffee": 15, "coast": 100}
 
+        
 class Recipe():
     def __init__(self, name) -> None:
         self.name = name
