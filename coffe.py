@@ -43,6 +43,7 @@ class StorageCapacity():
         self.coffee -= ingridients.get("coffee", 0)
         self.cream -= ingridients.get("cream", 0)
         self.syrup -= ingridients.get("syrup", 0)
+        self.money += ingridients.get("money")
 
     def put(self, ingridients):
         self.milk += ingridients.get("milk", 0)
@@ -51,15 +52,20 @@ class StorageCapacity():
         self.cream += ingridients.get("cream", 0)
         self.syrup += ingridients.get("syrup", 0)
 
-    def money(self, money):
-        pass
-
 
 class CoffeeMachine():
     def __init__(self) -> None:
-        pass
+        self.stor = StorageCapacity()
+        self.menu = []
+        for item in drinks:
+            self.menu.append(Recipe(item))
+    
+    def init_menu(self):
+        self.new_menu = []
+        for item in self.menu:
+            if self.stor.milk > item.data["milk"] and self.stor.coffee > item.data["coffee"] and self.stor.milk > item.data["milk"]:
+                self.new_menu.append(item)
+        
 
 
-recipe = Recipe("latte")
-stor = StorageCapacity()
-stor.get({"milk": 100})
+coffee = CoffeeMachine()
