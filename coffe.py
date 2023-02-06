@@ -43,7 +43,7 @@ class StorageCapacity():
         self.coffee -= ingridients.get("coffee", 0)
         self.cream -= ingridients.get("cream", 0)
         self.syrup -= ingridients.get("syrup", 0)
-        self.money += ingridients.get("money")
+        self.money += ingridients.get("coast")
 
     def put(self, ingridients):
         self.milk += ingridients.get("milk", 0)
@@ -72,5 +72,10 @@ class CoffeeMachine():
             if l == k:
                 self.new_menu.append(item)
 
+    def cook(self, name):
+        self.stor.take(drinks[name])
+        print(self.stor.get())        
+
+
 coffee = CoffeeMachine()
-coffee.init_menu()
+coffee.cook("latte")
