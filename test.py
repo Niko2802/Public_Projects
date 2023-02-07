@@ -1,15 +1,9 @@
 import PySimpleGUI as sg
 layout = [
-    [sg.Text('File 1'), sg.InputText(), sg.FileBrowse(),
-     sg.Checkbox('MD5'), sg.Checkbox('SHA1')
-     ],
-    [sg.Text('File 2'), sg.InputText(), sg.FileBrowse(),
-     sg.Checkbox('SHA256')
-     ],
-    [sg.Output(size=(88, 20))],
-    [sg.Submit(), sg.Cancel()]
+    [sg.Button('Coffee-1', size=(15, 1)), sg.Text('100 рублей', size=(15, 1))],
+    [sg.Button('Coffee-2', size=(15, 1)), sg.Text('200 рублей', size=(15, 1))],
 ]
-window = sg.Window('File Compare', layout)
+window = sg.Window('Кофе машина', layout)
 while True:                             # The Event Loop
     event, values = window.read()
     # print(event, values) #debug
