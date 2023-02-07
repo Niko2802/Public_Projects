@@ -10,23 +10,37 @@
 # Латте с сиропом - молоко - 250, кофе - 7, вода - 50, сироп - 10
 # Кофе со сливками - вода - 150, кофе - 10, сливки - 20
 
-drinks = {
-    "kapuchino": {"milk": 200, "coffee": 15, "coast": 100},
-    "latte": {"milk": 250, "coffee": 7, "water": 50, "coast": 150},
-    "amerikano": {"water": 150, "coffee": 5, "coast": 120},
-    "latte_with_syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
-    "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
-}
+# drinks = {
+#     "kapuchino": {"milk": 200, "coffee": 15, "coast": 100},
+#     "latte": {"milk": 250, "coffee": 7, "water": 50, "coast": 150},
+#     "amerikano": {"water": 150, "coffee": 5, "coast": 120},
+#     "latte_with_syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
+#     "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
+# }
 
 class Ingridients():
     def __init__(self) -> None:
-        self.kapuchino = {"milk": 200, "coffee": 15, "coast": 100}
+        self.drinks = {
+            "kapuchino": {"milk": 200, "coffee": 15, "coast": 100},
+            "latte": {"milk": 250, "coffee": 7, "water": 50, "coast": 150},
+            "amerikano": {"water": 150, "coffee": 5, "coast": 120},
+            "latte_with_syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
+            "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
+        }
+    def get(self, name=None):
+        if name is None:
+            return self.drinks
+        else:
+            return self.drinks[name]
+    
+    def add(self, drink):
+        self.drinks.update(drink)
 
         
 class Recipe():
-    def __init__(self, name) -> None:
+    def __init__(self, name, data) -> None:
         self.name = name
-        self.data = drinks.get(name)
+        self.data = data
 
 
 class StorageCapacity():
@@ -60,9 +74,10 @@ class StorageCapacity():
 class CoffeeMachine():
     def __init__(self) -> None:
         self.stor = StorageCapacity()
+        self.ing = Ingridients()
         self.menu = []
-        for item in drinks:
-            self.menu.append(Recipe(item))
+        for item in self.ing.get():
+            self.menu.append(Recipe(item, self.ing.get(item)))
     
     def init_menu(self):
         self.new_menu = []
@@ -80,8 +95,14 @@ class CoffeeMachine():
         return [x.name for x in self.new_menu]
 
     def cook(self, name):
-        self.stor.take(drinks[name])
+        self.stor.take(self.ing.get(name))
         CoffeeMachine.init_menu(self)
+
+    def add_to_stor(self, ingridients):
+        self.stor.put(ingridients)
+
+    def add_ing(self, drink):
+        pass
 
 
 coffee = CoffeeMachine()
