@@ -17,6 +17,18 @@
 #     "latte_with_syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
 #     "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
 # }
+import enum
+
+class Ingridient(enum.Enum):
+    milk = 1
+    coffee = 2
+    water = 3
+    syrup = 4
+    cream = 5
+    coast = 6
+
+
+
 
 class Ingridients():
     def __init__(self) -> None:
