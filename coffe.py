@@ -18,6 +18,8 @@
 #     "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
 # }
 import enum
+import PySimpleGUI as sg
+
 
 class Ingridient(enum.Enum):
     milk = 1
@@ -28,27 +30,26 @@ class Ingridient(enum.Enum):
     coast = 6
 
 
-
-
 class Ingridients():
     def __init__(self) -> None:
         self.drinks = {
             "kapuchino": {"milk": 200, "coffee": 15, "coast": 100},
             "latte": {"milk": 250, "coffee": 7, "water": 50, "coast": 150},
             "amerikano": {"water": 150, "coffee": 5, "coast": 120},
-            "latte_with_syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
-            "coffee_with_cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
+            "latte with syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
+            "coffee with cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
         }
+
     def get(self, name=None):
         if name is None:
             return self.drinks
         else:
             return self.drinks[name]
-    
+
     def add(self, drink):
         self.drinks.update(drink)
 
-        
+
 class Recipe():
     def __init__(self, name, data) -> None:
         self.name = name
@@ -90,10 +91,11 @@ class CoffeeMachine():
         self.menu = []
         for item in self.ing.get():
             self.menu.append(Recipe(item, self.ing.get(item)))
-    
+
     def init_menu(self):
-        self.new_menu = []
-        for item in self.menu:
+        old_menu = self.menu
+        self.menu.clear()
+        for item in old_menu:
             l = len(item.data) - 1
             k = 0
             st = self.stor.get()
@@ -101,21 +103,46 @@ class CoffeeMachine():
                 if item.data[key] <= st.get(key, 0):
                     k += 1
             if l == k:
-                self.new_menu.append(item)
-    
-    def menu(self):
-        return [x.name for x in self.new_menu]
+                self.menu.append(item)
+
+    def list_menu(self):
+        return self.menu
+
+    def list_names(self):
+        return [x.name for x in self.menu]
 
     def cook(self, name):
         self.stor.take(self.ing.get(name))
-        CoffeeMachine.init_menu(self)
+        for item in self.menu:
+            l = len(item.data) - 1
+            k = 0
+            st = self.stor.get()
+            for key in item.data:
+                if item.data[key] <= st.get(key, 0):
+                    k += 1
+            if l != k:
+                self.menu.remove(item)
 
     def add_to_stor(self, ingridients):
         self.stor.put(ingridients)
 
-    def add_ing(self, drink):
-        pass
-
+def create_layout():
+    layout = []
+    for item in coffee.list_menu():
+        layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(f'{item.data["coast"]} рублей', size=(15, 1))])
+    return layout
 
 coffee = CoffeeMachine()
-coffee.cook("latte")
+layout = create_layout()
+window = sg.Window('Кофе машина', layout)
+while True: 
+    event, values = window.read()
+    if event is not None:
+        coffee.cook(event)
+        print(coffee.stor.get())
+        print(coffee.list_names())
+        for button in layout:
+            if button[0].get_text() not in coffee.list_names():
+                button[0].update(disabled=True)
+    if event in (None, 'Exit', 'Cancel'):
+        break
