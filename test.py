@@ -11,11 +11,11 @@
 # Кофе со сливками - вода - 150, кофе - 10, сливки - 20
 
 drinks = {
-    "kapuchino": {"milk": 200, "coffee": 15, "coast": 100},
-    "latte": {"milk": 250, "coffee": 7, "water": 50, "coast": 150},
-    "amerikano": {"water": 150, "coffee": 5, "coast": 120},
-    "latte with syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "coast": 170},
-    "coffee with cream": {"water": 150, "coffee": 10, "cream": 20, "coast": 140}
+    "kapuchino": {"milk": 200, "coffee": 15, "money": 100},
+    "latte": {"milk": 250, "coffee": 7, "water": 50, "money": 150},
+    "amerikano": {"water": 150, "coffee": 5, "money": 120},
+    "latte with syrup": {"milk": 250, "coffee": 7, "water": 50, "syrup": 10, "money": 170},
+    "coffee with cream": {"water": 150, "coffee": 10, "cream": 20, "money": 140}
 }
 import enum
 import PySimpleGUI as sg
@@ -27,7 +27,7 @@ class Ingridient(enum.Enum):
     water = 3
     syrup = 4
     cream = 5
-    coast = 6
+    money = 6
 
 
 class Recipe():
@@ -54,7 +54,7 @@ class StorageCapacity():
         self.coffee -= ingridients.get("coffee", 0)
         self.cream -= ingridients.get("cream", 0)
         self.syrup -= ingridients.get("syrup", 0)
-        self.money += ingridients.get("coast")
+        self.money += ingridients.get("money")
 
     def put(self, ingridients):
         self.milk += ingridients.get("milk", 0)
@@ -83,15 +83,20 @@ class Storage():
 class CoffeeMachine():
     def __init__(self) -> None:
         self.stor = StorageCapacity()
+        self.storage = []
         self.menu = []
         ing_drink = {}
         for name_drink in drinks:
             for ing in Ingridient:
+                if ing.name != "money":
+                    self.storage.append(Storage(ing.name, 500))
+                else:
+                    self.storage.append(Storage(ing.name, 0))
                 if ing.name in drinks.get(name_drink):
                     ing_drink.update({ing.name: drinks.get(name_drink)[ing.name]})
             self.menu.append(Recipe(name_drink, ing_drink.copy()))
             ing_drink.clear()
-
+        print(self.storage)
     def list_menu(self):
         return self.menu
 
@@ -107,7 +112,7 @@ class CoffeeMachine():
             k = 0
             st = self.stor.get()
             for key in item.data:
-                if key != "coast" and item.data[key] > st.get(key):
+                if key != "money" and item.data[key] > st.get(key):
                     k += 1
             if k > 0:
                 self.menu.remove(item)
@@ -119,7 +124,7 @@ class CoffeeMachine():
 def create_layout():
     layout = []
     for item in coffee.list_menu():
-        layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(text=f'{item.data["coast"]} рублей', size=(15, 1))])
+        layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(text=f'{item.data["money"]} рублей', size=(15, 1))])
     return layout
 
 coffee = CoffeeMachine()
