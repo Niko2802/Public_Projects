@@ -102,7 +102,7 @@ def create_layout():
     layout = []
     for item in coffee.list_menu():
         layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(
-            text=f'{item.data["money"]} рублей', size=(15, 1))])
+            text=f'{item.data[Ingridient.money.name]} рублей', size=(15, 1))])
     return layout
 
 
@@ -113,7 +113,7 @@ while True:
     event, values = window.read()
     if event is not None:
         coffee.cook(event)
-        print([x.data for x in coffee.storage if x.name == "money"])
+        print([x.data for x in coffee.storage if x.name == Ingridient.money.name])
         print(coffee.list_names())
         for button in layout:
             if button[0].get_text() not in coffee.list_names():
