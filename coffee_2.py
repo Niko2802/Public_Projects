@@ -92,8 +92,10 @@ class CoffeeMachine():
             if k > 0:
                 self.menu.remove(item)
 
-    def put_to_stor(self, ingridients):
-        self.stor.put(ingridients)
+    def put_to_stor(self, name, data):
+        for stor in self.storage:
+            if stor.name == name:
+                stor.put(data)
 
 
 def create_layout():
