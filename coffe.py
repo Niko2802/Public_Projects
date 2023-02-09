@@ -92,19 +92,6 @@ class CoffeeMachine():
         for item in self.ing.get():
             self.menu.append(Recipe(item, self.ing.get(item)))
 
-    def init_menu(self):
-        old_menu = self.menu
-        self.menu.clear()
-        for item in old_menu:
-            l = len(item.data) - 1
-            k = 0
-            st = self.stor.get()
-            for key in item.data:
-                if item.data[key] <= st.get(key, 0):
-                    k += 1
-            if l == k:
-                self.menu.append(item)
-
     def list_menu(self):
         return self.menu
 
@@ -113,14 +100,14 @@ class CoffeeMachine():
 
     def cook(self, name):
         self.stor.take(self.ing.get(name))
-        for item in self.menu:
-            l = len(item.data) - 1
+        old_menu = self.menu.copy()
+        for item in old_menu:
             k = 0
             st = self.stor.get()
             for key in item.data:
-                if item.data[key] <= st.get(key, 0):
+                if key != "coast" and item.data[key] > st.get(key):
                     k += 1
-            if l != k:
+            if k > 0:
                 self.menu.remove(item)
 
     def add_to_stor(self, ingridients):
@@ -129,7 +116,7 @@ class CoffeeMachine():
 def create_layout():
     layout = []
     for item in coffee.list_menu():
-        layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(f'{item.data["coast"]} рублей', size=(15, 1))])
+        layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(text=f'{item.data["coast"]} рублей', size=(15, 1))])
     return layout
 
 coffee = CoffeeMachine()
