@@ -1,4 +1,4 @@
- # Пять компонентов кофе: кофе, вода, сливки, сироп, молоко.
+# Пять компонентов кофе: кофе, вода, сливки, сироп, молоко.
 # Рецепты с разным набором компонентов. Если ингридиентов не хватает, рецепт не доступен.
 # У каждого рецепта своя цена.
 # Реализовать структуру
@@ -75,14 +75,7 @@ class CoffeeMachine():
     def list_names(self):
         return [x.name for x in self.menu]
 
-    def cook(self, name):
-        for rec in self.menu:
-            if rec.name == name:
-                for stor in self.storage:
-                    if stor.name in rec.data and stor.name != Ingridient.money.name:
-                        stor.take(rec.data[stor.name])
-                    elif stor.name in rec.data and stor.name == Ingridient.money.name:
-                        stor.put(rec.data[stor.name])
+    def init_menu(self):
         old_menu = self.menu.copy()
         for item in old_menu:
             k = 0
@@ -92,31 +85,53 @@ class CoffeeMachine():
             if k > 0:
                 self.menu.remove(item)
 
+    def cook(self, name):
+        for rec in self.menu:
+            if rec.name == name:
+                for stor in self.storage:
+                    if stor.name in rec.data and stor.name != Ingridient.money.name:
+                        stor.take(rec.data[stor.name])
+                    elif stor.name in rec.data and stor.name == Ingridient.money.name:
+                        stor.put(rec.data[stor.name])
+        self.init_menu()
+
     def put_to_stor(self, name, data):
         for stor in self.storage:
             if stor.name == name:
                 stor.put(data)
+        self.init_menu()
 
 
 def create_layout():
     layout = []
     for item in coffee.list_menu():
-        layout.append([sg.Button(button_text=item.name, size=(15, 1)), sg.Text(
+        layout.append([sg.Button(button_text=item.name, size=(15, 1), key=item.name), sg.Text(
             text=f'{item.data[Ingridient.money.name]} рублей', size=(15, 1))])
+    layout.append([sg.Text(text=f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей', key='balance'), sg.Button(
+        button_text='Storage', key='storage')])
     return layout
 
 
 coffee = CoffeeMachine()
 layout = create_layout()
 window = sg.Window('Кофе машина', layout)
+menu = coffee.list_names().copy()
 while True:
     event, values = window.read()
-    if event is not None:
+    if event in menu and event in coffee.list_names():
         coffee.cook(event)
         print([x.data for x in coffee.storage if x.name == Ingridient.money.name])
         print(coffee.list_names())
-        for button in layout:
-            if button[0].get_text() not in coffee.list_names():
-                button[0].update(disabled=True)
+        window['balance'].update(
+            f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей')
+        for r in menu:
+            if r not in coffee.list_names():
+                window[r].update(disabled=True)
+    if event == 'storage':
+        msg = ""
+        for st in coffee.storage:
+            if st.name != Ingridient.money.name:
+                msg += (f'{st.name} {st.data} \n')
+        sg.popup_ok(msg)
     if event in (None, 'Exit', 'Cancel'):
         break
