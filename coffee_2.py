@@ -120,8 +120,6 @@ while True:
     event, values = window.read()
     if event in menu and event in coffee.list_names():
         coffee.cook(event)
-        print([x.data for x in coffee.storage if x.name == Ingridient.money.name])
-        print(coffee.list_names())
         window['balance'].update(
             f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей')
         for r in menu:
