@@ -10,6 +10,17 @@
 # Латте с сиропом - молоко - 250, кофе - 7, вода - 50, сироп - 10
 # Кофе со сливками - вода - 150, кофе - 10, сливки - 20
 
+
+# Замечания
+# Убрать money из ингридиентов
+# Из меню сделать словарь
+# ing_drink = {} Заменить на словарь объектов класса Storage
+# Вместо удаления элемента меню, сделать полное пересоздание меню и добавить это в __init__
+# put_to_stor сделать через *args
+# Сделать вывод в окно более правильным
+# Выделить меню в отдельный класс 
+
+
 import PySimpleGUI as sg
 import enum
 drinks = {
@@ -57,7 +68,7 @@ class CoffeeMachine():
         self.menu = []
         ing_drink = {}
         for ing in Ingridient:
-            if ing.name != Ingridient.money.name:
+            if ing != Ingridient.money:
                 self.storage.append(Storage(ing.name, 500))
             else:
                 self.storage.append(Storage(ing.name, 0))
