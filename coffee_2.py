@@ -38,13 +38,14 @@ class Ingridient(enum.Enum):
     water = 3
     syrup = 4
     cream = 5
-    money = 6
+    # money = 6
 
 
 class Recipe():
-    def __init__(self, name, data) -> None:
+    def __init__(self, name, data, coast) -> None:
         self.name = name
         self.data = data
+        self.coast = coast
 
 
 class Storage():
@@ -62,22 +63,48 @@ class Storage():
         self.data += data
 
 
-class CoffeeMachine():
+class Menu():
     def __init__(self) -> None:
-        self.storage = []
-        self.menu = []
         ing_drink = {}
-        for ing in Ingridient:
-            if ing != Ingridient.money:
-                self.storage.append(Storage(ing.name, 500))
-            else:
-                self.storage.append(Storage(ing.name, 0))
+        self.menu = {}
         for name_drink in drinks:
             for ing in Ingridient:
                 if ing.name in drinks.get(name_drink):
                     ing_drink.update(
-                        {ing.name: drinks.get(name_drink)[ing.name]})
-            self.menu.append(Recipe(name_drink, ing_drink.copy()))
+                        {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+            self.menu.update({name_drink: Recipe(name_drink, ing_drink.copy(), drinks.get(name_drink)["money"])})
+            ing_drink.clear()
+
+    def list_menu(self):
+        return self.menu.keys
+
+    def init_menu(self):
+        old_menu = self.menu.copy()
+        for item in old_menu:
+            k = 0
+            for stor in self.storage:
+                if stor.name != Ingridient.money.name and item.data.get(stor.name, 0) > stor.data:
+                    k += 1
+            if k > 0:
+                self.menu.remove(item)
+
+
+class CoffeeMachine():
+    def __init__(self) -> None:
+        self.storage = []
+        self.menu = {}
+        ing_drink = {}
+        for ing in Ingridient:
+            # if ing != Ingridient.money:
+            self.storage.append(Storage(ing.name, 500))
+            # else:
+            #     self.storage.append(Storage(ing.name, 0))
+        for name_drink in drinks:
+            for ing in Ingridient:
+                if ing.name in drinks.get(name_drink):
+                    ing_drink.update(
+                        {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+            self.menu.update({name_drink: Recipe(name_drink, ing_drink.copy(), drinks.get(name_drink)["money"])})
             ing_drink.clear()
 
     def list_menu(self):
