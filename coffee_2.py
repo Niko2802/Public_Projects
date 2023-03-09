@@ -18,7 +18,7 @@
 # Вместо удаления элемента меню, сделать полное пересоздание меню и добавить это в __init__
 # put_to_stor сделать через *args
 # Сделать вывод в окно более правильным
-# Выделить меню в отдельный класс 
+# Выделить меню в отдельный класс
 
 
 import PySimpleGUI as sg
@@ -47,6 +47,15 @@ class Recipe():
         self.data = data
         self.coast = coast
 
+    def name(self):
+        return self.name
+
+    def data(self):
+        return self.data
+
+    def coast(self):
+        return self.coast
+
 
 class Storage():
     def __init__(self, name, data) -> None:
@@ -64,74 +73,93 @@ class Storage():
 
 
 class Menu():
-    def __init__(self) -> None:
-        ing_drink = {}
+    def __init__(self, storage) -> None:
+        self.ing_drink = {}
         self.menu = {}
+        # for name_drink in drinks:
+        #     for ing in Ingridient:
+        #         if ing.name in drinks.get(name_drink):
+        #             self.ing_drink.update(
+        #                 {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+        #     self.menu.update({name_drink: Recipe(name_drink, self.ing_drink.copy(), drinks.get(name_drink)["money"])})
+        #     self.ing_drink.clear()
+        self.menu.clear()
+        self.storage = storage
+        self.ing_drink.clear()
         for name_drink in drinks:
-            for ing in Ingridient:
-                if ing.name in drinks.get(name_drink):
-                    ing_drink.update(
+            k = 0
+            for ing in self.storage:
+                if ing.data >= drinks.get(name_drink)[ing.name]:
+                    k += 1
+                    self.ing_drink.update(
                         {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
-            self.menu.update({name_drink: Recipe(name_drink, ing_drink.copy(), drinks.get(name_drink)["money"])})
-            ing_drink.clear()
+            if k == len(drinks.get(name_drink))-1:
+                self.menu.update({name_drink: Recipe(
+                    name_drink, self.ing_drink.copy(), drinks.get(name_drink)["money"])})
+            self.ing_drink.clear()
+
+    def init_menu(self, storage):
+        self.menu.clear()
+        self.storage = storage
+        self.ing_drink.clear()
+        for name_drink in drinks:
+            k = 0
+            for ing in self.storage:
+                if ing.data >= drinks.get(name_drink)[ing.name]:
+                    k += 1
+                    self.ing_drink.update(
+                        {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+            if k == len(drinks.get(name_drink))-1:
+                self.menu.update({name_drink: Recipe(
+                    name_drink, self.ing_drink, drinks.get(name_drink)["money"])})
+            self.ing_drink.clear()
+        return self.menu
 
     def list_menu(self):
         return self.menu.keys
 
-    def init_menu(self):
-        old_menu = self.menu.copy()
-        for item in old_menu:
-            k = 0
-            for stor in self.storage:
-                if stor.name != Ingridient.money.name and item.data.get(stor.name, 0) > stor.data:
-                    k += 1
-            if k > 0:
-                self.menu.remove(item)
+    def get(self):
+        return self.menu
 
 
 class CoffeeMachine():
     def __init__(self) -> None:
         self.storage = []
-        self.menu = {}
-        ing_drink = {}
+        # ing_drink = {}
         for ing in Ingridient:
             # if ing != Ingridient.money:
             self.storage.append(Storage(ing.name, 500))
             # else:
             #     self.storage.append(Storage(ing.name, 0))
-        for name_drink in drinks:
-            for ing in Ingridient:
-                if ing.name in drinks.get(name_drink):
-                    ing_drink.update(
-                        {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
-            self.menu.update({name_drink: Recipe(name_drink, ing_drink.copy(), drinks.get(name_drink)["money"])})
-            ing_drink.clear()
+        self.menu = Menu(self.storage)
+    #     for name_drink in drinks:
+    #         for ing in Ingridient:
+    #             if ing.name in drinks.get(name_drink):
+    #                 ing_drink.update(
+    #                     {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+    #         self.menu.update({name_drink: Recipe(name_drink, ing_drink.copy(), drinks.get(name_drink)["money"])})
+    #         ing_drink.clear()
 
-    def list_menu(self):
-        return self.menu
+    # def list_menu(self):
+    #     return self.menu
 
-    def list_names(self):
-        return [x.name for x in self.menu]
+    # def list_names(self):
+    #     return [x.name for x in self.menu]
 
-    def init_menu(self):
-        old_menu = self.menu.copy()
-        for item in old_menu:
-            k = 0
-            for stor in self.storage:
-                if stor.name != Ingridient.money.name and item.data.get(stor.name, 0) > stor.data:
-                    k += 1
-            if k > 0:
-                self.menu.remove(item)
+    # def init_menu(self):
+    #     old_menu = self.menu.copy()
+    #     for item in old_menu:
+    #         k = 0
+    #         for stor in self.storage:
+    #             if stor.name != Ingridient.money.name and item.data.get(stor.name, 0) > stor.data:
+    #                 k += 1
+    #         if k > 0:
+    #             self.menu.remove(item)
 
     def cook(self, name):
-        for rec in self.menu:
-            if rec.name == name:
-                for stor in self.storage:
-                    if stor.name in rec.data and stor.name != Ingridient.money.name:
-                        stor.take(rec.data[stor.name])
-                    elif stor.name in rec.data and stor.name == Ingridient.money.name:
-                        stor.put(rec.data[stor.name])
-        self.init_menu()
+        recipe = self.menu.get(name)
+            
+        self.menu.init_menu()
 
     def put_to_stor(self, name, data):
         for stor in self.storage:
