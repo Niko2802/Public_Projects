@@ -125,6 +125,7 @@ class Menu():
 class CoffeeMachine():
     def __init__(self) -> None:
         self.storage = []
+        self.money = 0
         # ing_drink = {}
         for ing in Ingridient:
             # if ing != Ingridient.money:
