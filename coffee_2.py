@@ -61,6 +61,9 @@ class Storage():
     def __init__(self, name, data) -> None:
         self.name = name
         self.data = data
+    
+    def get_name(self):
+        return self.name
 
     def get(self):
         return self.data
@@ -88,7 +91,7 @@ class Menu():
         self.ing_drink.clear()
         for name_drink in drinks:
             k = 0
-            for ing in self.storage:
+            for ing in self.storage.values():
                 if ing.data >= drinks.get(name_drink)[ing.name]:
                     k += 1
                     self.ing_drink.update(
@@ -104,7 +107,7 @@ class Menu():
         self.ing_drink.clear()
         for name_drink in drinks:
             k = 0
-            for ing in self.storage:
+            for ing in self.storage.values():
                 if ing.data >= drinks.get(name_drink)[ing.name]:
                     k += 1
                     self.ing_drink.update(
@@ -124,12 +127,12 @@ class Menu():
 
 class CoffeeMachine():
     def __init__(self) -> None:
-        self.storage = []
+        self.storage = {}
         self.money = 0
         # ing_drink = {}
         for ing in Ingridient:
             # if ing != Ingridient.money:
-            self.storage.append(Storage(ing.name, 500))
+            self.storage.update({ing.name: Storage(ing.name, 500)})
             # else:
             #     self.storage.append(Storage(ing.name, 0))
         self.menu = Menu(self.storage)
@@ -159,7 +162,8 @@ class CoffeeMachine():
 
     def cook(self, name):
         recipe = self.menu.get(name)
-            
+        for ing in recipe.data().values():
+            self.storage.update({ing.get_name(): self.storage.get(ing.get_name()) - ing.get()})
         self.menu.init_menu()
 
     def put_to_stor(self, name, data):
