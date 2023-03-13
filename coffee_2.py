@@ -90,15 +90,14 @@ class Menu():
         self.storage = storage
         self.ing_drink.clear()
         for name_drink in drinks:
+            data_drink = drinks.get(name_drink)
             k = 0
             for ing in self.storage.values():
-                if ing.data >= drinks.get(name_drink)[ing.name]:
+                if ing.get() >= data_drink.get(ing.get_name(), 0):
                     k += 1
-                    self.ing_drink.update(
-                        {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+                    self.ing_drink.update({ing.get_name(): Storage(ing.get_name(), data_drink.get(ing.get_name(), 0))})
             if k == len(drinks.get(name_drink))-1:
-                self.menu.update({name_drink: Recipe(
-                    name_drink, self.ing_drink.copy(), drinks.get(name_drink)["money"])})
+                self.menu.update({name_drink: Recipe(name_drink, self.ing_drink, drinks.get(name_drink)["money"])})
             self.ing_drink.clear()
 
     def init_menu(self, storage):
@@ -106,20 +105,19 @@ class Menu():
         self.storage = storage
         self.ing_drink.clear()
         for name_drink in drinks:
+            data_drink = drinks.get(name_drink)
             k = 0
             for ing in self.storage.values():
-                if ing.data >= drinks.get(name_drink)[ing.name]:
+                if ing.get() >= drinks.get(name_drink)[ing.get_name()]:
                     k += 1
-                    self.ing_drink.update(
-                        {ing.name: Storage(ing.name, drinks.get(name_drink)[ing.name])})
+                    self.ing_drink.update({ing.get_name(): Storage(ing.get_name(), data_drink.get(ing.get_name(), 0))})
             if k == len(drinks.get(name_drink))-1:
-                self.menu.update({name_drink: Recipe(
-                    name_drink, self.ing_drink, drinks.get(name_drink)["money"])})
+                self.menu.update({name_drink: Recipe(name_drink, self.ing_drink, drinks.get(name_drink)["money"])})
             self.ing_drink.clear()
         return self.menu
 
     def list_menu(self):
-        return self.menu.keys
+        return self.menu.keys()
 
     def get(self):
         return self.menu
@@ -144,8 +142,8 @@ class CoffeeMachine():
     #         self.menu.update({name_drink: Recipe(name_drink, ing_drink.copy(), drinks.get(name_drink)["money"])})
     #         ing_drink.clear()
 
-    # def list_menu(self):
-    #     return self.menu
+    def list_menu(self):
+        return self.menu.list_menu()
 
     # def list_names(self):
     #     return [x.name for x in self.menu]
@@ -164,6 +162,7 @@ class CoffeeMachine():
         recipe = self.menu.get(name)
         for ing in recipe.data().values():
             self.storage.update({ing.get_name(): self.storage.get(ing.get_name()) - ing.get()})
+        self.money += recipe.coast()
         self.menu.init_menu()
 
     def put_to_stor(self, name, data):
@@ -176,7 +175,7 @@ class CoffeeMachine():
 def create_layout():
     layout = []
     for item in coffee.list_menu():
-        layout.append([sg.Button(button_text=item.name, size=(15, 1), key=item.name), sg.Text(
+        layout.append([sg.Button(button_text=item, size=(15, 1), key=item), sg.Text(
             text=f'{item.data[Ingridient.money.name]} рублей', size=(15, 1))])
     layout.append([sg.Text(text=f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей', key='balance'), sg.Button(
         button_text='Storage', key='storage')])
