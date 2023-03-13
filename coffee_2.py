@@ -96,7 +96,7 @@ class Menu():
                 if ing.get() >= data_drink.get(ing.get_name(), 0):
                     k += 1
                     self.ing_drink.update({ing.get_name(): Storage(ing.get_name(), data_drink.get(ing.get_name(), 0))})
-            if k == len(drinks.get(name_drink))-1:
+            if k == len(drinks.get(name_drink))-2:
                 self.menu.update({name_drink: Recipe(name_drink, self.ing_drink, drinks.get(name_drink)["money"])})
             self.ing_drink.clear()
 
@@ -144,6 +144,9 @@ class CoffeeMachine():
 
     def list_menu(self):
         return self.menu.list_menu()
+    
+    def balance(self):
+        return self.money
 
     # def list_names(self):
     #     return [x.name for x in self.menu]
@@ -169,7 +172,7 @@ class CoffeeMachine():
         for stor in self.storage:
             if stor.name == name:
                 stor.put(data)
-        self.init_menu()
+        self.menu.init_menu()
 
 
 def create_layout():
@@ -177,7 +180,7 @@ def create_layout():
     for item in coffee.list_menu():
         layout.append([sg.Button(button_text=item, size=(15, 1), key=item), sg.Text(
             text=f'{item.data[Ingridient.money.name]} рублей', size=(15, 1))])
-    layout.append([sg.Text(text=f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей', key='balance'), sg.Button(
+    layout.append([sg.Text(text=f'Баланс машины {coffee.balance()} рублей', key='balance'), sg.Button(
         button_text='Storage', key='storage')])
     return layout
 
@@ -185,21 +188,22 @@ def create_layout():
 coffee = CoffeeMachine()
 layout = create_layout()
 window = sg.Window('Кофе машина', layout)
-menu = coffee.list_names().copy()
-while True:
-    event, values = window.read()
-    if event in menu and event in coffee.list_names():
-        coffee.cook(event)
-        window['balance'].update(
-            f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей')
-        for r in menu:
-            if r not in coffee.list_names():
-                window[r].update(disabled=True)
-    if event == 'storage':
-        msg = ""
-        for st in coffee.storage:
-            if st.name != Ingridient.money.name:
-                msg += (f'{st.name} {st.data} \n')
-        sg.popup_ok(msg)
-    if event in (None, 'Exit', 'Cancel'):
-        break
+menu = coffee.list_menu()
+print(menu)
+# while True:
+#     event, values = window.read()
+#     if event in menu and event in coffee.list_names():
+#         coffee.cook(event)
+#         window['balance'].update(
+#             f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей')
+#         for r in menu:
+#             if r not in coffee.list_names():
+#                 window[r].update(disabled=True)
+#     if event == 'storage':
+#         msg = ""
+#         for st in coffee.storage:
+#             if st.name != Ingridient.money.name:
+#                 msg += (f'{st.name} {st.data} \n')
+#         sg.popup_ok(msg)
+#     if event in (None, 'Exit', 'Cancel'):
+#         break
