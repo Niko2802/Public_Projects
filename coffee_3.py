@@ -13,7 +13,7 @@
 
 # 1. Много параметров при инициализации кофемашины
 # 2. Нельзя пополнять после инициализации
-# MVP - Model View Presenter 
+# MVP - Model View Presenter
 
 import PySimpleGUI as sg
 
@@ -112,7 +112,7 @@ class ConsoleMenu():
             print(f"{i+1}. {s}")
         s = input("Введите напиток:")
         return s
-    
+
     def start(self):
         while True:
             lst = coffee.get_recipes()
@@ -127,41 +127,44 @@ class SimpleGUIMenu():
     def __init__(self, coffee) -> None:
         self.coffee = coffee
         self.window = sg.Window('Кофе машина', self.create_layout())
-    
+
+    def check(self, name):
+        for n, v in coffee.get_recipes():
+            if name == n:
+                return True
+        return False
+
     def start(self):
         while True:
             name, values = self.window.read()
             if self.check(name):
                 coffee.cook(name)
                 self.window['balance'].update(
-                    f'Баланс машины {[x.data for x in coffee.storage if x.name == Ingridient.money.name][0]} рублей')
-                for r in menu:
-                    if r not in coffee.list_names():
-                        self.window[r].update(disabled=True)
+                    f'Баланс машины {coffee.money} рублей')
+            for n in coffee.drinks.keys():
+                if not self.check(n):
+                    self.window[n].update(disabled=True)
             if name == 'storage':
                 msg = ""
-                for st in coffee.storage:
-                    if st.name != Ingridient.money.name:
-                        msg += (f'{st.name} {st.data} \n')
+                for name, ing in coffee.storage.storage.items():
+                    msg += (f'{name} {ing.val} \n')
                 sg.popup_ok(msg)
             if name in (None, 'Exit', 'Cancel'):
                 break
-
 
     def create_layout(self):
         layout = []
         for k, v in coffee.get_recipes():
             layout.append([
-                sg.Button(button_text=k, size=(15, 1), key=k), 
+                sg.Button(button_text=k, size=(15, 1), key=k),
                 sg.Text(text=f'{v} рублей', size=(15, 1))
             ])
         layout.append([
-            sg.Text(text=f'Баланс машины {coffee.money} рублей', key='balance'), 
+            sg.Text(
+                text=f'Баланс машины {coffee.money} рублей', key='balance'),
             sg.Button(button_text='Storage', key='storage')
-            ])
+        ])
         return layout
-
-
 
 
 class CoffeeMachine():
@@ -175,7 +178,6 @@ class CoffeeMachine():
         recipe = self.drinks.get(name)
         if recipe is not None:
             self.money += self.prices.get(name)
-            print(self.money)
             self.storage.cook(recipe)
 
     def get_recipes(self):
