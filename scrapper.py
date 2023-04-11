@@ -25,7 +25,7 @@ r = requests.post("https://morpher.ru/Demo.aspx", headers = headers, data=post_d
 print(r.status_code)
 if r.status_code == 200:
     html_text = r.text
-    with open("test.html", "w") as f:
+    with open("test.html", "w", encoding="utf-8") as f:
         f.write(html_text)
     res_doc = pq(html_text)
     for x in res_doc.items("td.answer > span"):
