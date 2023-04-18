@@ -1,6 +1,6 @@
 def right_num(n):
     if n < 10:
-        return n
+        return str(n)
     else:
         return str(n % 10) + " " + str(right_num(n // 10))
 
