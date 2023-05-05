@@ -6,3 +6,9 @@ h1 {
     list-style-type: none;
     text-transform: uppercase;
 }
+span {
+    font-weight: bold;
+}
+body {
+    background-color: #6f4e37;
+}
