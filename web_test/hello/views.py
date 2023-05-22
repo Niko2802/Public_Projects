@@ -50,12 +50,14 @@ def menu(request, coffee):
     # }
     drin = {}
     drin.update(x for x in coffee.get_recipes())
-    print(drin)
     context = {"drinks": drin}
     return render(request, "menu.html", context=context)
 
-def vault(request):
-    pass
+def vault(request, coffee):
+    v = {}
+    v.update(x for x in coffee.storage.storage.items())
+    context = {"ingridients": v, "vault": "Остатки"}
+    return render(request, "vault.html", context=context)
 
 def buy(request, name, coffee):
     context = {}

@@ -11,7 +11,7 @@ urlpatterns = [
     path("", views.menu, {"coffee": coffee}),
     path("menu", views.menu, {"coffee": coffee}),
     path("menu/<str:name>", views.buy, {"coffee": coffee}),
-    path("vault", views.vault)
+    path("vault", views.vault, {"coffee": coffee})
     # path("about", views.about),
     # path("blog/<int:year>/", views.blogs),
     # path("test", views.test),

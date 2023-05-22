@@ -2,24 +2,25 @@
 {% load static %}
 <html>
     <head>
-        <Title>Выберите свой напиток</Title>
+        <Title>{{ vault }}</Title>
         <link rel="stylesheet" href="{% static "css/main.css" %}">
     </head>
     <body>
         <header></header>
         <div>
-            <h1>Меню</h1>
+            <h1>{{ vault }}</h1>
             <ul class="ml">
-                {% for k,v in drinks.items %}
-                <li><a href = "menu/{{ k }}">{{ k }} {{ v }}</a></li>
+                {% for k,v in ingridients.items %}
+                <li><span>{{ k }}</span>{{ v.val }}</li>
                 <!-- <li><a href = "menu/latte">latte</a></li>
                 <li><a href = "menu/amerikano">amerikano</a></li>
                 <li><a href = "menu/latte with syrup">latte with syrup</a></li>
                 <li><a href = "menu/coffee with cream">coffee with cream</a></li> -->
                 {% endfor %}
             </ul>
+            <!-- <button>Купить</button> -->
         </div>
-        <div><a href = "vault">Остатки</a></div>
+        <div><a href = "menu">Menu</a></div>
         <footer>
             <h2>Поддержка</h2>
             <ul>
