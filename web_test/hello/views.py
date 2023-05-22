@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
+
+
 # Create your views here.
 
 drinks = {
@@ -55,6 +57,9 @@ def vault(request):
 def buy(request, name):
     context = {}
     return render(request, "ingridients.html", context=context)
+
+
+
 
 # Все элементы span нужно сделать жирными
 # Фон страницы сделать кофейного цвета

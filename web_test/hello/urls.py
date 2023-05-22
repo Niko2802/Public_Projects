@@ -1,5 +1,11 @@
 from django.urls import path
 from hello import views
+import hello.coffee_3 as c
+
+storage = c.Storage.create(c.ingridients)
+storage.fill(c.ingridients)
+coffee = c.CoffeeMachine(storage, c.drinks, c.prices)
+
 
 urlpatterns = [
     path("", views.menu),
