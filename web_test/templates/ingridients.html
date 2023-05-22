@@ -18,7 +18,11 @@
                 <li><a href = "menu/coffee with cream">coffee with cream</a></li> -->
                 {% endfor %}
             </ul>
-            <button>Купить</button>
+            <form method="post" action="my.html">
+                <input type="hidden" name="data" value="1" />
+                <input type="submit" value="Купить"/>
+            </form>
+            <!-- <button>Купить</button> -->
         </div>
         <footer>
             <h2>Поддержка</h2>
