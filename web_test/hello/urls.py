@@ -8,9 +8,9 @@ coffee = c.CoffeeMachine(storage, c.drinks, c.prices)
 
 
 urlpatterns = [
-    path("", views.menu),
-    path("menu", views.menu),
-    path("menu/<str:name>", views.buy),
+    path("", views.menu, {"coffee": coffee}),
+    path("menu", views.menu, {"coffee": coffee}),
+    path("menu/<str:name>", views.buy, {"coffee": coffee}),
     path("vault", views.vault)
     # path("about", views.about),
     # path("blog/<int:year>/", views.blogs),

@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 
-
 # Create your views here.
 
 drinks = {
@@ -39,22 +38,26 @@ drinks = {
 #     page = f"<h2>Рецепт кофе {name}</h2><br>{ing_str}"
 #     return HttpResponse(page)
 
-def menu(request):
-    context = {
-        "drinks": {
-    "kapuchino": "Капучино",
-    "latte": "Латте",
-    "amerikano": "Американо",
-    "latte with syrup": "Латте с сиропом",
-    "coffee with cream": "Кофе со сливками",
-    "raf": "Раф"}
-    }
+def menu(request, coffee):
+    # context = {
+    #     "drinks": {
+    # "kapuchino": "Капучино",
+    # "latte": "Латте",
+    # "amerikano": "Американо",
+    # "latte with syrup": "Латте с сиропом",
+    # "coffee with cream": "Кофе со сливками",
+    # "raf": "Раф"}
+    # }
+    drin = {}
+    drin.update(x for x in coffee.get_recipes())
+    print(drin)
+    context = {"drinks": drin}
     return render(request, "menu.html", context=context)
 
 def vault(request):
     pass
 
-def buy(request, name):
+def buy(request, name, coffee):
     context = {}
     return render(request, "ingridients.html", context=context)
 

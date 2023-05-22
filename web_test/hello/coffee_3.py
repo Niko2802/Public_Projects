@@ -191,5 +191,5 @@ class CoffeeMachine():
 storage = Storage.create(ingridients)
 storage.fill(ingridients)
 coffee = CoffeeMachine(storage, drinks, prices)
-menu = SimpleGUIMenu(coffee)
-menu.start()
+# menu = SimpleGUIMenu(coffee)
+# menu.start()
