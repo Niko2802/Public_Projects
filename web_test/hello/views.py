@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -59,19 +59,19 @@ def vault(request, coffee):
     context = {"ingridients": v, "vault": "Остатки"}
     return render(request, "vault.html", context=context)
 
+@csrf_exempt
 def buy(request, name, coffee):
+    if request.method == "POST":
+        pass
     context = {}
     return render(request, "ingridients.html", context=context)
 
 
 
 
-# Все элементы span нужно сделать жирными
-# Фон страницы сделать кофейного цвета
-# ! Сделать фон на всю страницу
-# Подключить код кофемашины к проекту Django
-# Сделать страницу Vault
 # Реализовать Post запрос на кнопку купить
-# 
-# 
-# 
+# Footer разместить внизу страницы
+# Реализовать наслодование шаблонов
+# Jinja подключение, установка и синтаксис
+# Less компилятор для CSS обзорное знакомство
+# Создать пользователя и базу данных posgresql
