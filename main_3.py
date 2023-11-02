@@ -17,6 +17,7 @@ class TestResponse(BaseModel):
 async def work() -> None: 
     await asyncio.sleep(3) 
 
+task = asyncio.create_task(work())
 
 @router.get("/")
 async def read_root():
@@ -26,9 +27,7 @@ async def read_root():
 async def handler() -> TestResponse: 
     ts1 = time.monotonic() 
     print(ts1)
-    async with work_lock:
-        print("start lock")
-        work()
+    await task
     print("end lock")
     # ... организация вызовы функции work() ... 
     ts2 = time.monotonic() 
