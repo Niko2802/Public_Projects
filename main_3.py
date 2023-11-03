@@ -6,23 +6,18 @@ import asyncio
 
 router = FastAPI()
 
-
 class TestResponse(BaseModel): 
     elapsed: float 
 
 async def work() -> None: 
-    await asyncio.sleep(3) 
+    await asyncio.sleep(3)
 
-
-@router.get("/")
-async def read_root():
-    return {"Hello"}
-
+semaphor = asyncio.Semaphore(1)
 
 @router.get("/test", response_model=TestResponse) 
 async def handler() -> TestResponse: 
     ts1 = time.monotonic() 
-    async with asyncio.Lock():
+    async with semaphor:
         await work()
     ts2 = time.monotonic() 
     return TestResponse(elapsed=ts2 - ts1) 
