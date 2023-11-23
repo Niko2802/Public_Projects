@@ -19,6 +19,7 @@ ad-users-1c.log
 ad_work.py
 cisco.py
 WiFi-cisco-guest.log
+password_encrypt.py
 
 # Distribution / packaging
 .Python
