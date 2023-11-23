@@ -20,6 +20,8 @@ ad_work.py
 cisco.py
 WiFi-cisco-guest.log
 password_encrypt.py
+private_key.pem
+public_key.pem
 
 # Distribution / packaging
 .Python
