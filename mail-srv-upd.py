@@ -1,11 +1,9 @@
 import tkinter as tk
 
+factory = ["агтф", "уз", "тн-юг", "в", "м", "мф", "нн", "тн-нн", "ну", "ук", "уч"]
 
 def on_button_send_click():
-    print("Отправка...")
-    print(cb_nn_val.get())
-    print("Отправка...")
-
+    pass
 
 window = tk.Tk()
 window.title("Заявка в ИТ")
@@ -15,18 +13,20 @@ subject_label = tk.Label(window, text="Тема письма:")
 subject_label.grid(row=0, column=0)
 
 subject = tk.Text(window, height=3, width=50)
-subject.grid(row=1, column=0)
+subject.grid(row=1, column=0, rowspan=3, columnspan=5)
 
-cb_nn_val = tk.BooleanVar()
-cb_nn = tk.Checkbutton(window, text="нн.", variable=cb_nn_val)
-cb_nn.grid(row=2, column=0)
+check_boxes = {}
 
-cb_uk_val = tk.BooleanVar()
-cb_uk = tk.Checkbutton(window, text="ук.", variable=cb_uk_val)
-cb_uk.grid(row=2, column=1)
+for i in factory:
+    cb_val = tk.BooleanVar()
+    cb = tk.Checkbutton(window, text=i, variable=cb_val)
+    cb.grid(row=4 + factory.index(i), column=0, sticky="w")
+    check_boxes[i] = cb
+print(check_boxes)
+
 
 button_send = tk.Button(window, text="Отправить", command=on_button_send_click)
-button_send.grid(row=3, column=0)
+button_send.grid(row=15, column=0)
 
 
 
