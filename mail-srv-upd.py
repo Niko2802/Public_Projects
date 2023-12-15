@@ -15,14 +15,11 @@ subject_label.grid(row=0, column=0)
 subject = tk.Text(window, height=3, width=50)
 subject.grid(row=1, column=0, rowspan=3, columnspan=5)
 
-check_boxes = {}
 
 for i in factory:
     cb_val = tk.BooleanVar()
     cb = tk.Checkbutton(window, text=i, variable=cb_val)
     cb.grid(row=4 + factory.index(i), column=0, sticky="w")
-    check_boxes[i] = cb
-print(check_boxes)
 
 
 button_send = tk.Button(window, text="Отправить", command=on_button_send_click)
