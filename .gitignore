@@ -22,6 +22,7 @@ WiFi-cisco-guest.log
 password_encrypt.py
 private_key.pem
 public_key.pem
+mail-srv-upd.py
 
 # Distribution / packaging
 .Python
