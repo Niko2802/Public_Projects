@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from exchangelib import Credentials, DELEGATE, Account, Configuration, Message, Mailbox
 
 
@@ -23,12 +24,19 @@ class Ch_box():
 
 
 def on_button_send_click():
+    subj = ""
+    if selected_option.get() == "":
+        subj = subject.get("1.0", tk.END)
+    elif subject.get() == "":
+        subj = selected_option.get()
+    else:
+        messagebox.showwarning(title="Warning", message="This is a warning message!")
     for i in list_ch_boxes:
         if i.get_value():
             print(i.name, i.get_value())
             print(selected_option.get())
             Message(account=my_account, to_recipients=to_recipients,
-                    subject=f"{i.name} {selected_option.get()}", body=selected_option.get()).send()
+                    subject=f"{i.name} {subj}", body=subj).send()
 
 
 window = tk.Tk()

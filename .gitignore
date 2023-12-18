@@ -24,6 +24,7 @@ private_key.pem
 public_key.pem
 mail-srv-upd.py
 
+
 # Distribution / packaging
 .Python
 build/
