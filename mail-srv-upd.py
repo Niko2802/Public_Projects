@@ -2,7 +2,13 @@ import tkinter as tk
 from exchangelib import Credentials, DELEGATE, Account, Configuration, Message, Mailbox
 
 
-
+credentials = Credentials(username='NEW_TN\\simakov', password='MoskaliPidarasy14')
+config = Configuration(server='mail.tn.ru', credentials=credentials)
+my_account = Account(
+    primary_smtp_address='simakov@nicol-pack.ru', config=config,
+    autodiscover=False, access_type=DELEGATE
+)
+to_recipients = ["simakov@nicol-pack.ru"]
 factory = ["агтф", "уз", "тн-юг", "в", "м", "мф", "нн", "тн-нн", "ну", "ук", "уч"]
 
 class Ch_box():
@@ -18,8 +24,11 @@ class Ch_box():
 
 def on_button_send_click():
     for i in list_ch_boxes:
-        print(i.name, i.get_value())
-        print(selected_option.get())
+        if i.get_value():
+            print(i.name, i.get_value())
+            print(selected_option.get())
+            Message(account=my_account, to_recipients=to_recipients,
+                    subject=f"{i.name} {selected_option.get()}", body=selected_option.get()).send()
 
 
 window = tk.Tk()
