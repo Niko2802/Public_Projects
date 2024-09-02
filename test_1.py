@@ -1,6 +1,6 @@
 import iuliia
 
-source = "Харитон"
+source = "Чиженков Олег Владимирович"
 trans = iuliia.translate(source, schema=iuliia.WIKIPEDIA)
 print(trans)
 
