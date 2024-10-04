@@ -46,8 +46,17 @@ def change_password_current_user(new_password):
     config['Password']['last_password'] = new_password
     with open('TG_comp_tools.ini', 'w', encoding="utf8") as configfile:
         config.write(configfile)
-    return 0
     return os.system(f"net user {login} {new_password}")
+
+
+def declension_minutes(num):
+    if num % 10 == 1 and num % 100 != 11: 
+        return "минуту"
+    elif 2 <= num % 10 <= 4 and (num % 100 < 10 or num % 100 >= 20):
+        return "минуты"
+    else:
+        return "минут"
+    
 
 async def on_startup(_):
     await typing()
@@ -56,7 +65,6 @@ async def on_startup(_):
             await bot.send_message(key, f"Компьютер включен.\nБот онлайн :)\n\nТекущий пароль {config['Password']['last_password']}")
 
 def shutdown_computer(minutes=5):
-    return
     return os.system(f"shutdown /s /t {minutes}")
 
 async def typing():
@@ -129,7 +137,7 @@ async def input_minutes(message: Message, state: FSMContext):
 async def check_minutes(message: Message, state: FSMContext):
     await typing()
     shutdown_computer(message.text)
-    await message.answer(text=f"Компьютер будет выключен через {message.text} минут")
+    await message.answer(text=f"Компьютер будет выключен через {message.text} {declension_minutes(int(message.text))}")
     await state.clear()
 
 @dp.message(Minutes.min)
