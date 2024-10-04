@@ -47,23 +47,22 @@ def change_password_current_user(new_password):
     with open('TG_comp_tools.ini', 'w', encoding="utf8") as configfile:
         config.write(configfile)
     return 0
-    # return os.system(f"net user {login} {new_password}")
+    return os.system(f"net user {login} {new_password}")
 
 async def on_startup(_):
+    await typing()
     for key in config:
         if key.isdigit():
             await bot.send_message(key, f"Компьютер включен.\nБот онлайн :)\n\nТекущий пароль {config['Password']['last_password']}")
 
 def shutdown_computer(minutes=5):
     return
-    # return os.system(f"shutdown /s /t {minutes}")
+    return os.system(f"shutdown /s /t {minutes}")
 
 async def typing():
-    while True:
-            for key in config:
-                if key.isdigit():
-                    await bot.send_chat_action(key, action="TYPING")
-                    await asyncio.sleep(6)
+    for key in config:
+        if key.isdigit():
+            await bot.send_chat_action(key, action="TYPING")
 
 @dp.message(Command("start"))
 async def process_start_command(message: types.Message):
@@ -88,6 +87,7 @@ async def input_password(message: Message, state: FSMContext):
 
 @dp.message(Passw.passw, F.text.in_(autorization_code))
 async def check_input_password(message: Message, state: FSMContext):
+    await typing()
     await message.answer("Вы авторизованы!")
     await bot.delete_message(message.chat.id, message.message_id)
     config.add_section(str(message.from_user.id))
@@ -104,10 +104,12 @@ async def check_input_password(message: Message, state: FSMContext):
 
 @dp.message(Passw.passw)
 async def password_incorrectly(message: Message):
+    await typing()
     await message.answer(text="Пароль введен не верно.\n\n" "Введите пароль:")
 
 @dp.message(F.text =="Создать новый пароль")
 async def new_password(message: types.Message):
+    await typing()
     password = generate_password(8, 2)
     res = change_password_current_user(password)
     if res == 0:
@@ -119,19 +121,26 @@ async def new_password(message: types.Message):
 
 @dp.message(StateFilter(None), F.text == "Выключить компьютер")
 async def input_minutes(message: Message, state: FSMContext):
+    await typing()
     await message.answer(text="Через сколько минут выключить компьютер?:")
     await state.set_state(Minutes.min)
 
 @dp.message(Minutes.min, lambda message: message.text.isdigit())
 async def check_minutes(message: Message, state: FSMContext):
+    await typing()
     shutdown_computer(message.text)
     await message.answer(text=f"Компьютер будет выключен через {message.text} минут")
     await state.clear()
 
 @dp.message(Minutes.min)
 async def minutes_incorrectly(message: Message):
+    await typing()
     await message.answer(text="Нужно ввести число.\n\n" "Введите минуты:")
 
+@dp.message(F.text)
+async def nothing(message: types.Message):
+    await typing()
+    await message.answer(text="Компьютер работает!")
 
 
 async def main():
