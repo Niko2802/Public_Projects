@@ -80,7 +80,7 @@ async def process_start_command(message: types.Message):
             [types.KeyboardButton(text="Выключить компьютер")]
         ]
         keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
-        await message.answer("Привет!\nЯ бот, который управляет игровым диском Вани!\nЯ умею менять пароль на вход в Windows.\nУмею выключать компьютер.\nДля управления, выбери нужную кнопку.", reply_markup=keyboard)
+        await message.answer("Привет!\nЯ умею менять пароль на вход в Windows.\nУмею выключать компьютер.\nДля управления, выбери нужную кнопку.", reply_markup=keyboard)
     else:
         kb = [
             [types.KeyboardButton(text="Ввести пароль")]
