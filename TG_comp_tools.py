@@ -4,6 +4,7 @@ import string
 import asyncio
 import logging
 import configparser
+import win32net
 from aiogram import Bot, Dispatcher, types, Router, F
 from aiogram.filters.command import Command
 from aiogram.filters import Command, StateFilter
@@ -42,11 +43,15 @@ def generate_password(length=8, complexity=2):
 
 
 def change_password_current_user(new_password):
-    login = os.getlogin()
     config['Password']['last_password'] = new_password
     with open('TG_comp_tools.ini', 'w', encoding="utf8") as configfile:
         config.write(configfile)
-    return os.system(f"net user {login} {new_password}")
+    users = win32net.NetUserEnum(None, 2, 0, 0)
+    res = 0
+    for user in users[0]:
+        if user['num_logons'] > 0:
+            res = res + os.system(f"net user {user['name']} {new_password}")
+    return res
 
 
 def declension_minutes(num):
@@ -65,7 +70,7 @@ async def on_startup(_):
             await bot.send_message(key, f"Компьютер включен.\nБот онлайн :)\n\nТекущий пароль {config['Password']['last_password']}")
 
 def shutdown_computer(minutes=5):
-    return os.system(f"shutdown /s /t {minutes}")
+    return os.system(f"shutdown /s /t {minutes * 60}")
 
 async def typing():
     for key in config:
