@@ -70,7 +70,8 @@ async def on_startup(_):
             await bot.send_message(key, f"Компьютер включен.\nБот онлайн :)\n\nТекущий пароль {config['Password']['last_password']}")
 
 def shutdown_computer(minutes=5):
-    return os.system(f"shutdown /s /t {minutes * 60}")
+    min = int(minutes) * 60
+    return os.system(f"shutdown /s /t {int(min)}")
 
 async def typing():
     for key in config:
